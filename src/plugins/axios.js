@@ -12,7 +12,7 @@ let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
-  baseURL: process.env.NODE_ENV === 'production' ? 'http://122.152.250.27/proxy-sina-api/news/wap' : '/api-sina'
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://www.mylinlang.com/proxy-sina-api/news/wap' : '/api-sina'
 };
 
 const _axios = axios.create(config);
