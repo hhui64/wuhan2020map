@@ -1,32 +1,47 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+
+    <transition :name="transitionName">
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </transition>
+
   </div>
 </template>
 
+<script>
+import areaList from '@/assets/json/area'
+import hospitalList from '@/assets/json/hospital'
+
+export default {
+  data() {
+    return {
+      transitionName: ''
+    }
+  },
+  watch: {
+    // 使用 watch 监听 $router 的变化
+    $route(to, from) {
+      // 如果 to.meta.index 大于 from.meta.index，判断为前进状态，反之则为后退状态
+      if (to.meta.index > from.meta.index) {
+        this.transitionName = 'slide-left' // 设置动画名称-左边
+      } else {
+        this.transitionName = 'slide-right' // 设置动画名称-右边
+      }
+    }
+  },
+  mounted() {
+    this.$store.commit('setAreaList', areaList || [])
+    this.$store.commit('setHospitalList', hospitalList || [])
+  }
+}
+</script>
+
 <style lang="scss">
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+  height: 100%;
+  width: 100%;
+  background-color: #f7f8fa;
 }
 </style>
