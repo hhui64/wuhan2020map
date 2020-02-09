@@ -434,9 +434,10 @@ export default {
           line-height: 33px;
           &.number-font {
             font-family: 'DIN Condensed Bold Min';
-            font-size: 30px;
-            padding-top: 5px;
-            margin-bottom: 2px;
+            font-size: 1.95rem;
+            font-weight: normal;
+            padding-top: 4px;
+            margin-bottom: 3px;
           }
           &.size-small {
             font-size: 1rem;
