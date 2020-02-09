@@ -39,6 +39,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import './assets/style/global.scss';
+@import './assets/style/font.scss';
+
 #app {
   height: 100%;
   width: 100%;
