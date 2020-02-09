@@ -212,7 +212,7 @@ export default {
 
       function onError(data) {
         // 定位出错
-        this.$notify({ type: 'danger', message: '无法获取定位信息' })
+        self.$notify({ type: 'danger', message: '无法获取定位信息' })
         console.error(data)
       }
     },
