@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - "node"
+
+cache: npm
+
+script: npm run build
+
+deploy:
+provider: pages
+skip_cleanup: true
+github_token: $GITHUB_TOKEN
+local_dir: dist
+on:
+  branch: master
+branches:
+  only:
+    - master
+after_script:
+  - cd dist
+  - git init
+  - git add -A
+  - git commit -m 'deploy'
+  - git push -f https://${GITHUB_TOKEN}@github.com/hhui64/wuhan2020map.git master:gh-pages
+  - cd -
