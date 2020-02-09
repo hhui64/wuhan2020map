@@ -10,7 +10,7 @@ module.exports = {
     proxy: {
       '/api-sina': {
         // 此处的写法，目的是为了 将 /api 替换成 url
-        target: 'https://interface.sina.cn/news/wap/fymap2020_data.d.json',
+        target: 'https://interface.sina.cn/news/wap',
         // 允许跨域
         changeOrigin: true,
         // ws: true,
