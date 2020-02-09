@@ -2,7 +2,7 @@
   "name": "wuhan2020map",
   "version": "0.0.1",
   "private": false,
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "git@github.com:hhui64/wuhan2020map.git"
   },
