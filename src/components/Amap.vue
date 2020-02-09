@@ -383,7 +383,7 @@ export default {
       })
     },
     getFeiyanJsonData() {
-      this.axios.get('/api-sina').then(res => {
+      this.axios.get('/fymap2020_data.d.json').then(res => {
         this.feiyanJsonData = res.data
       })
     }
