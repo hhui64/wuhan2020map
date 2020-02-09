@@ -212,7 +212,7 @@ export default {
 
       function onError(data) {
         // 定位出错
-        this.$notify({ type: 'danger', message: '无法获取定位信息' })
+        self.$notify({ type: 'danger', message: '无法获取定位信息' })
         console.error(data)
       }
     },
@@ -406,6 +406,7 @@ export default {
   bottom: 34px;
   padding: 18px 2px;
   width: calc(100% - 26px);
+  max-width: 800px;
   height: 60px;
   background-color: #fff;
   border-radius: 12px;
@@ -432,7 +433,7 @@ export default {
           font-weight: bold;
           line-height: 33px;
           &.number-font {
-            font-family: 'DIN Condensed';
+            font-family: 'DIN Condensed Bold Min';
             font-size: 30px;
             padding-top: 5px;
             margin-bottom: 2px;
