@@ -53,7 +53,7 @@
 <script>
 import Vue from 'vue'
 import areaList from '@/assets/json/area'
-import hospitalList from '@/assets/json/hospital'
+// import hospitalList from '@/assets/json/hospital'
 
 export default {
   data() {
@@ -62,6 +62,13 @@ export default {
       map: null,
       mapData: {
         isLoadedPlugins: false,
+        loader: [
+          'AMap.Geolocation',
+          'AMap.Geocoder',
+          'AMap.MarkerClusterer',
+          'AMap.PlaceSearch',
+          'AMap.DistrictSearch'
+        ],
         plugins: {
           DistrictSearch: null,
           Geolocation: null,
@@ -71,6 +78,7 @@ export default {
           InfoWindow: null
         },
         markers: [],
+        polygons: [],
         districtList: []
       },
       info: {
@@ -96,6 +104,10 @@ export default {
       handler: function() {
         // 是否正在搜索中...
         if (this.status.isSearchingHospital) return
+        // 设置地图行政区
+        this.mapGoCity(this.info.city)
+        // 绘制行政区边界
+        this.mapDrawCityBounds(this.info.city)
         // 切换城市时，关闭地图上已打开的信息窗口
         if (this.mapData.plugins.InfoWindow) {
           this.mapData.plugins.InfoWindow.close(this.map)
@@ -161,7 +173,7 @@ export default {
       /**
        * 初始化插件
        */
-      AMap.plugin(['AMap.Geolocation', 'AMap.Geocoder', 'AMap.MarkerClusterer', 'AMap.PlaceSearch'], () => {
+      AMap.plugin(this.mapData.loader, () => {
         this.mapData.isLoadedPlugins = true
         this.mapGetLocation()
         this.mapData.plugins.MarkerClusterer = new AMap.MarkerClusterer(this.map, [], {
@@ -204,8 +216,37 @@ export default {
           // 省市信息
           self.info.province = data.addressComponent.province
           self.info.city = data.addressComponent.city
-          self.info.adcode = (parseInt(Number(data.addressComponent.adcode) / 100) * 100).toString()
-          self.mapGoCity(self.info.adcode)
+          if (data.addressComponent.adcode.slice(2, 4) == '90') {
+            const exAdcodeEnum = {
+              // 湖北
+              429004: 429104,
+              429005: 429205,
+              429006: 429306,
+              429021: 429421,
+              // 海南
+              469005: 468005,
+              469002: 468102,
+              469007: 468207,
+              469006: 468306,
+              469001: 468401,
+              469029: 468529,
+              469023: 468623,
+              469022: 468722,
+              469027: 468827,
+              469028: 468928,
+              469030: 469030,
+              469026: 469126,
+              469024: 469224,
+              469021: 469321,
+              469025: 469425,
+            }
+            if (Object.keys(exAdcodeEnum).includes(data.addressComponent.adcode)) {
+              data.addressComponent.adcode = exAdcodeEnum[data.addressComponent.adcode]
+              console.log(data.addressComponent.adcode)
+            }
+          }
+          self.info.adcode = data.addressComponent.adcode
+          // self.mapGoCity(self.info.adcode)
           self.$nextTick()
         }
       }
@@ -216,29 +257,25 @@ export default {
         console.error(data)
       }
     },
+    /**
+     * 设置地图行政区
+     */
     mapGoCity(city) {
       this.map.setCity(city)
     },
     async mapCodeGetLocation(city, address) {
-      // this.mapData.Geocoder = new AMap.Geocoder({
-      //   city,
-      //   batch: true,
-      //   extensions: true
-      // })
-
+      // 实例化插件对象
       this.mapData.PlaceSearch = new AMap.PlaceSearch({
         city: city,
         citylimit: true
         // type: '医疗保健服务'
       })
 
-      // console.log(city)
-
-      // const asyncGetLocation = async addressArray => {
+      // 同步版 POI 查询
+      // const asyncPlaceSearch = async keywords => {
       //   return new Promise((resolve, reject) => {
-      //     this.mapData.Geocoder.getLocation(addressArray, (status, result) => {
+      //     this.mapData.PlaceSearch.search(keywords, (status, result) => {
       //       if (status === 'complete' && result.info === 'OK') {
-      //         // console.log(addressArray, result)
       //         resolve(result)
       //       } else {
       //         reject(result)
@@ -247,20 +284,6 @@ export default {
       //   })
       // }
 
-      const asyncPlaceSearch = async keywords => {
-        return new Promise((resolve, reject) => {
-          this.mapData.PlaceSearch.search(keywords, (status, result) => {
-            if (status === 'complete' && result.info === 'OK') {
-              resolve(result)
-            } else {
-              reject(result)
-            }
-          })
-        })
-      }
-
-      // let resultArray = [],
-      //   addressArrayBuffer = []
       this.$notify({ type: 'warning', duration: 0, message: '正在查询，请稍后...' })
       this.status.isSearchingHospital = true
 
@@ -268,21 +291,6 @@ export default {
         _resultExArray = []
 
       if (Array.isArray(address)) {
-        // if (address.length > 10) {
-        //   // 数组拆分为每份 10 个地理位置
-        //   for (let i = 0; i < address.length; i += 10) {
-        //     addressArrayBuffer.push(address.slice(i, i + 10))
-        //   }
-        // } else {
-        //   addressArrayBuffer.push(address)
-        // }
-        // // 分批遍历发送地理编码请求
-        // for (let i = 0; i < addressArrayBuffer.length; i++) {
-        //   let _addressArray = addressArrayBuffer[i].map(item => item.exAddress || item.address || item.name)
-        //   resultArray.push(await asyncGetLocation(_addressArray))
-        // }
-
-        // 测试代码
         for (let i = 0; i < _addressExArray.length; i++) {
           this.mapData.PlaceSearch.search(_addressExArray[i], (status, result) => {
             if (status === 'complete' && (result.info === 'OK' || result.info === 'TIP_KEYWORDS')) {
@@ -348,7 +356,43 @@ export default {
         this.status.isSearchingHospital = false
       }
     },
-    mapDrawCityBounds(provinceName, cityName) {},
+    /**
+     * 绘制行政区域边界
+     */
+    mapDrawCityBounds(city) {
+      this.mapData.plugins.DistrictSearch = new AMap.DistrictSearch({
+        // 关键字对应的行政区级别，country表示国家
+        level: 'city',
+        // 显示下级行政区级数，1表示返回下一级行政区
+        subdistrict: 1,
+        // 返回所有信息，里面包括边界线信息，用以绘制
+        extensions: 'all'
+      })
+      this.mapData.plugins.DistrictSearch.search(city, (status, result) => {
+        if (status == 'complete') {
+          let bounds = result.districtList[0].boundaries
+          // 先移除之前已绘制的边界图形
+          this.map.remove(this.mapData.polygons)
+          // 绘制
+          if (bounds) {
+            for (let i = 0; i < bounds.length; i++) {
+              // 生成行政区划 polygon
+              let polygon = new AMap.Polygon({
+                map: this.map,
+                strokeWeight: 1, // 边界线宽
+                // strokeStyle: 'dashed',
+                path: bounds[i],
+                fillOpacity: 0, // 填充色透明度
+                fillColor: '#ffffff', // 填充色
+                strokeOpacity: 1,
+                strokeColor: '#188ffc', // 边界色
+              })
+              this.mapData.polygons.push(polygon)
+            }
+          }
+        }
+      })
+    },
     openAreaPicker() {
       if (this.status.isSearchingHospital) return
       this.status.isShowPickerPopup = true
@@ -365,8 +409,6 @@ export default {
       this.info.city = city
       this.info.adcode = o[1].code.toString()
       // this.status.isShowPickerPopup = false
-      // 切换城市处理
-      this.mapGoCity(this.info.adcode)
     },
     onCalcelArea() {
       this.closeAreaPicker()
@@ -428,9 +470,13 @@ export default {
         text-align: center;
         &.number {
           margin-bottom: 7px;
+          padding: 0 6px;
           font-size: 1.5rem;
           font-weight: bold;
           line-height: 33px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
           &.number-font {
             font-family: 'DIN Condensed Bold Min';
             font-size: 1.95rem;

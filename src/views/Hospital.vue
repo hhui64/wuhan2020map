@@ -8,16 +8,19 @@
         :key="index"
       >
         <div class="yuan"></div>
-        <p class="hospital-item__title">{{ item.name }}<van-tag
+        <p class="hospital-item__title">{{ item.name }}
+          <!-- <van-tag
             class="h-tag"
             plain
             type="primary"
             v-for="(tag, i) in item.type.tags"
             :key="i"
-          >{{ tag }}</van-tag>
+          >{{ tag }}</van-tag> -->
+          <van-tag class="h-tag" plain type="primary" v-if="item.isDesignated">定点医院</van-tag>
         </p>
         <p class="hospital-item__info">{{ item.address || '(暂无地址)' }}</p>
       </div>
+      <p class="tip" v-if="cityHospitalList.length <= 0">该城市暂无发热门诊</p>
     </div>
   </div>
 </template>
@@ -49,6 +52,7 @@ export default {
   box-sizing: border-box;
   height: calc(100% - 46px);
   padding: 12px;
+  overflow-y: scroll;
   .hospital-item {
     position: relative;
     padding: 12px 12px 12px 26px;
@@ -86,6 +90,11 @@ export default {
       }
     }
   }
-  overflow-y: scroll;
+  p.tip {
+    margin-top: 6rem;
+    font-size: 14px;
+    color: rgba(69, 90, 100, 0.6);
+    text-align: center;
+  }
 }
 </style>

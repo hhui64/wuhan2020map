@@ -12,7 +12,7 @@
 
 <script>
 import areaList from '@/assets/json/area'
-import hospitalList from '@/assets/json/hospital'
+import hospitalList from '@/assets/json/data_20200211030250.json'
 
 export default {
   data() {
