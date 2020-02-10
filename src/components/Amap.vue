@@ -1,7 +1,7 @@
 <template>
   <div class="amap-wrap">
     <div id="amap-container"></div>
-    <div class="h-card">
+    <div class="h-card z-300">
       <van-row class="info-row">
         <van-col span="8">
           <div class="info-col">
@@ -30,7 +30,7 @@
         </van-col>
       </van-row>
     </div>
-    <div class="h-copyright">
+    <div class="h-copyright z-300">
       <p>© 2020 HUANGHU1</p>
     </div>
     <van-popup
@@ -399,7 +399,6 @@ export default {
 }
 
 .h-card {
-  z-index: 300;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
