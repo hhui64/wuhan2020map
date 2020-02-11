@@ -218,6 +218,12 @@ export default {
           self.info.city = data.addressComponent.city
           if (data.addressComponent.adcode.slice(2, 4) == '90') {
             const exAdcodeEnum = {
+              // 河南
+              410181: 419181,
+              411481: 419281,
+              411381: 419381,
+              410728: 419428,
+              410482: 419582,
               // 湖北
               429004: 429104,
               429005: 429205,
