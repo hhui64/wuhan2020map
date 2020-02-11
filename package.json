@@ -1,6 +1,6 @@
 {
   "name": "wuhan2020map",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "@vue/cli-service": "^4.1.0",
     "@vue/eslint-config-prettier": "^5.0.0",
     "babel-eslint": "^10.0.3",
+    "babel-plugin-import": "^1.13.0",
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.0.0",
@@ -39,25 +40,5 @@
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-axios": "0.0.4",
     "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {
-      "prettier": 0,
-      "no-console": 0,
-      "no-unused-vars": 0,
-      "require-atomic-updates": 0,
-      "no-async-promise-executor": 0
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
   }
 }
