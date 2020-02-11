@@ -4,12 +4,47 @@ import App from "./App.vue"
 import "./registerServiceWorker"
 import router from "./router"
 import store from "./store"
-import Vant from 'vant'
-import 'vant/lib/index.css'
+
+import {
+  Cell,
+  CellGroup,
+  Col,
+  Row,
+  Popup,
+  Dialog,
+  Toast,
+  Notify,
+  Tag,
+  NavBar,
+  Tab, 
+  Tabs,
+  Area,
+  Icon,
+  Image,
+  Lazyload,
+  Loading
+} from 'vant'
 
 Vue.config.productionTip = false
 
-Vue.use(Vant)
+
+Vue.use(Cell)
+Vue.use(CellGroup)
+Vue.use(Col)
+Vue.use(Row)
+Vue.use(Popup)
+Vue.use(Dialog)
+Vue.use(Toast)
+Vue.use(Notify)
+Vue.use(Tag)
+Vue.use(NavBar)
+Vue.use(Tab)
+Vue.use(Tabs)
+Vue.use(Area)
+Vue.use(Icon)
+Vue.use(Image)
+Vue.use(Lazyload)
+Vue.use(Loading)
 
 new Vue({
   router,
